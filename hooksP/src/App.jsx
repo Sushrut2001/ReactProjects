@@ -1,39 +1,39 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
-import './App.css'
+import Cards from './Components/Cards'
+
 
 
 
 function App() {
-  let [num, setnum] = useState(1)
-   const addValue = () => {
-    console.log("Value added", num)
-    if(num >= 20){
-      alert("Only 20 members are allowed")
-      return(20)
-    }
-    // num = num + 1
-    setnum(num + 1)
-    
-  }
-  const removeValue = () => {
-    console.log("Value removed", num)
+  const [data, setData] = useState([])
 
-    if (num <= 0) {
-      alert("Value can't less than 0")
-      return (0)
-    }
-    setnum(num - 1)
+  const displayData = async () => {
+    const api = "https://dummyjson.com/products"
+    const response = await fetch(api);
+    const result = await response.json();
+    setData(result)
   }
+
+  useEffect(() => {
+    displayData();
+  }, [])
+  console.log(data.products);
+
   return (
-    <>
-      <h1>Hooks</h1>
-      <h2>Counter Value: {num}</h2>
-      <button onClick={addValue}>Add value: {num}</button>
-      <button onClick={removeValue}>Remove value: {num}</button>
-    </>
+    <div>
+      <div className='flex justify-center items-center'>
+        <input type="text" className='m-5 p-3 w-[500px] border-none' placeholder='Search what you want...' />
+      </div>
+      <div className='grid grid-cols-3 h-full gap-5 m-5 text-center'>
+        {data.products?.map((product) => (
+          <Cards products={product} />
+        ))}
+      </div>
+
+    </div>
   )
 }
 
-export default App
+export default App;
